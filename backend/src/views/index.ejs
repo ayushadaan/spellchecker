@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Website Quality Checker Tool</title>
+    <!-- Link to Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="text-center mb-4">Website Quality Checker Tool</h1>
+
+      <form action="/api/check-url" method="POST">
+        <div class="form-group">
+          <label for="url">Website URL:</label>
+          <input type="url" class="form-control" id="url" name="url" required />
+        </div>
+        <div class="form-group">
+          <label for="language">Language for Spell Check:</label>
+          <select class="form-control" name="language" id="language">
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+
+      <% if (results) { %>
+      <div class="mt-4">
+        <h2>Results:</h2>
+
+        <!-- Spelling Errors -->
+        <% if (results.spellingErrors && results.spellingErrors.length > 0) { %>
+        <div class="mt-3">
+          <h3>Spelling Errors:</h3>
+          <ul class="list-group">
+            <% results.spellingErrors.forEach((error) => { %>
+            <li class="list-group-item">
+              <strong><%= error.message %></strong>
+              <br />
+              <span>Context: "<%= error.context.text %>"</span>
+              <br />
+              <span>Suggestions: <%= error.replacements.map((r) => r.value).join(', ') %></span>
+            </li>
+            <% }); %>
+          </ul>
+        </div>
+        <% } else { %>
+        <p>No spelling errors found. Your text looks great!</p>
+        <% } %>
+
+        <!-- Missing ALT Tags -->
+        <% if (results.altErrors && results.altErrors.length > 0) { %>
+        <div class="mt-3">
+          <h3>Missing ALT Tags:</h3>
+          <ul class="list-group">
+            <% results.altErrors.forEach((src) => { %>
+            <li class="list-group-item">Missing ALT for image: <%= src %></li>
+            <% }); %>
+          </ul>
+        </div>
+        <% } else { %>
+        <p>No missing ALT tags found.</p>
+        <% } %>
+
+        <!-- Meta Tags -->
+        <% if (results.metaTags) { %>
+        <div class="mt-3">
+          <h3>Meta Tags:</h3>
+          <p>
+            <strong>Title:</strong> <%= results.metaTags.title.content %>
+            (Status: <%= results.metaTags.title.status %>)
+          </p>
+          <p>
+            <strong>Description:</strong> <%= results.metaTags.description.content || 'No description' %> (Status: <%= results.metaTags.description.status %>)
+          </p>
+        </div>
+        <% } %>
+      </div>
+      <% } %>
+    </div>
+
+    <!-- Link to Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
