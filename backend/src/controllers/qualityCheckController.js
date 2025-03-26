@@ -7,24 +7,23 @@ import * as cheerio from "cheerio";
 function isValidUrl(url) {
   const regex = /^(http|https):\/\/[^ "]+$/;
   return regex.test(url);
-}
+} 
 
 // Function to check spelling errors using LanguageTool API
-async function checkSpelling(language, text) {
-  const url = `https://api.languagetoolplus.com/v2/check`;
-  // const data = {
-  //   text: "Text is not proided, i am comletely usefull and this data is useul" ,
-  //   language: language,
-  // };
-  const data = new URLSearchParams();
-  data.append("text", text);
-  data.append("language", language);
+async function checkSpelling(text,lang) {
+  // const text =
+  //   "Text is not proided, i am comletely usefull and this data is useul";
+
+  const url = `https://api.languagetool.org/v2/check?text=${text}&language=auto`;
+
   try {
-    const response = await axios.post(url, data, {
+    const response = await axios.get(url, {
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "application/json",
       },
     });
+
+    // console.log(response.data.matches);
 
     if (response.data.matches && response.data.matches.length > 0) {
       return response.data.matches;

@@ -14,6 +14,8 @@ const Home = () => {
         language,
       });
       setResults(response.data);
+      console.log(response);
+      
     } catch (error) {
       console.error("Error:", error);
     }
