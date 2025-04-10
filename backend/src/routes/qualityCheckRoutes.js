@@ -1,5 +1,5 @@
 import express from "express";
-import { qualityCheckController } from "../controllers/qualityCheckController.js";
+import { qualityCheckController } from "../controllers/qualitycheckController.js";
 
 const router = express.Router();
 

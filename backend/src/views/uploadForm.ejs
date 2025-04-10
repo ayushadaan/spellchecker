@@ -1,0 +1,57 @@
+    <!-- views/uploadForm.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alt Tag Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Image Alt Tag Generator</h1>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" id="image" name="image" accept="image/*" required>
+    <button type="submit">Upload Image</button>
+  </form>
+
+  <% if (altTag) { %>
+    <h3>Generated Alt Tag:</h3>
+    <textarea readonly><%= altTag %></textarea>
+  <% } %>
+
+  <script>
+    // Handle image upload form submission
+    document.getElementById('uploadForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+
+      const formData = new FormData();
+      const imageFile = document.getElementById('image').files[0];
+      formData.append('image', imageFile);
+
+      // Send the image to the backend
+      const response = await fetch('/api/images/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Redirect to the same page with the generated alt tag
+        window.location.href = `/?altTag=${encodeURIComponent(data.altTag)}`;
+      } else {
+        const errorMessage = await response.text();
+        alert('Error: ' + errorMessage);
+      }
+    });
+  </script>
+</body>
+</html>

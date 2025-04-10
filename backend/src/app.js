@@ -3,7 +3,8 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import qualityCheckRoutes from "./routes/qualityCheckRoutes.js";
+import qualityCheckRoutes from "./routes/qualitycheckRoutes.js";
+import imageRoutes from "./routes/altTagRoutes.js";
 import ExpressError from "./utils/ExpressError.js";
 
 // Get current directory
@@ -16,6 +17,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(process.cwd(), "public")));
 
 // Set view engine
 app.set("view engine", "ejs");
@@ -25,9 +27,13 @@ app.set("views", path.join(__dirname, "views"));
 app.get("/", (req, res) => {
   res.render("index", { results: null });
 });
+app.get("/alt", (req, res) => {
+  res.render("uploadForm", { altTag: req.query.altTag || null });
+});
 
 // API Routes
 app.use("/api", qualityCheckRoutes);
+app.use("/api/images", imageRoutes);
 
 // Catch-all for undefined routes
 app.all("*", (req, res, next) => {

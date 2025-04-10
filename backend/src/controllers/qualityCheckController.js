@@ -7,14 +7,23 @@ import * as cheerio from "cheerio";
 function isValidUrl(url) {
   const regex = /^(http|https):\/\/[^ "]+$/;
   return regex.test(url);
-} 
+}
 
 // Function to check spelling errors using LanguageTool API
-async function checkSpelling(text,lang) {
-  // const text =
-  //   "Text is not proided, i am comletely usefull and this data is useul";
+async function checkSpelling(lang, text) {
+  if (!text || typeof text !== "string" || text.trim() === "") {
+    console.log("No text provided");
+    return [];
+  }
 
-  const url = `https://api.languagetool.org/v2/check?text=${text}&language=auto`;
+  const cleanText = text.trim().replace(/\s+/g, " ");
+
+  // URL encode the text to handle special characters properly
+  const encodedText = encodeURIComponent(cleanText);
+
+  const language = lang || "auto";
+
+  const url = `https://api.languagetool.org/v2/check?text=${encodedText}&language=auto`;
 
   try {
     const response = await axios.get(url, {
@@ -22,8 +31,7 @@ async function checkSpelling(text,lang) {
         "Content-Type": "application/json",
       },
     });
-
-    // console.log(response.data.matches);
+    console.log(response.data.matches);
 
     if (response.data.matches && response.data.matches.length > 0) {
       return response.data.matches;
@@ -105,7 +113,7 @@ export async function qualityCheckController(req, res) {
     // res.status(500).json({
     //   error: "Error occurred while fetching or processing the website.",
     // });
-    // console.log(error);
+    console.log(error);
 
     res.status(500).render("index", { error: "Something went wrong" });
   }
