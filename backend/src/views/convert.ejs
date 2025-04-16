@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>File Converter</title>
+</head>
+<body>
+  <h2>Convert Document</h2>
+  <form action="/convert-doc" method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" required>
+    <button type="submit">Convert to DOCX</button>
+  </form>
+
+  <h2>Convert Image</h2>
+  <form action="/convert-image" method="POST" enctype="multipart/form-data">
+    <input type="file" name="image" required>
+    <select name="format">
+      <option value="jpeg">JPEG</option>
+      <option value="png">PNG</option>
+      <option value="webp">WEBP</option>
+    </select>
+    <button type="submit">Convert</button>
+  </form>
+</body>
+</html>

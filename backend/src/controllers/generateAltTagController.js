@@ -11,8 +11,9 @@ process.env.GOOGLE_APPLICATION_CREDENTIALS = path.join(
   "./src/config",
   "first-inquiry-455012-e3-1102d04d6332.json"
 );
-console.log(
-  `Google Application Credentials: ${process.env.GOOGLE_APPLICATION_CREDENTIALS}`);
+
+// console.log(
+//   `Google Application Credentials: ${process.env.GOOGLE_APPLICATION_CREDENTIALS}`);
 
 const client = new ImageAnnotatorClient();
 
